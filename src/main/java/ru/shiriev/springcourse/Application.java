@@ -1,22 +1,18 @@
 package ru.shiriev.springcourse;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.shiriev.springcourse.dao.Course;
+import ru.shiriev.springcourse.dao.CourseDAO;
 
 public class Application {
 
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-        DrawingBoard drawingBoard = context.getBean(DrawingBoard.class);
-        drawingBoard.circle.draw();
-        drawingBoard.point.draw();
-        drawingBoard.circle.center.setX(10);
-        drawingBoard.circle.center.setY(7);
-        drawingBoard.circle.draw();
-        drawingBoard.point.draw();
-
-        Scene scene = context.getBean(Scene.class);
-        scene.draw();
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        CourseDAO courseDAO = context.getBean(CourseDAO.class);
+        for(Course c: courseDAO.findAll())
+            System.out.println(c);
     }
 
 }
