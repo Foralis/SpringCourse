@@ -13,6 +13,7 @@ public class Application {
         CourseDAO courseDAO = context.getBean(CourseDAO.class);
         for(Course c: courseDAO.findAll())
             System.out.println(c);
+``        context.close();
     }
 
 }
