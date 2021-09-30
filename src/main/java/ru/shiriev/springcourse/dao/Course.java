@@ -1,6 +1,14 @@
 package ru.shiriev.springcourse.dao;
 
-public class Course {
+import javax.persistence.*;
+
+import java.io.Serializable;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Entity
+@Table(name="courses")
+public class Course implements Serializable {
     private int id;
     private String title;
     private int length;
@@ -11,6 +19,9 @@ public class Course {
         return String.format("%-3d %-50s %-4d", id, title, length);
     }
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column
     public int getId() {
         return id;
     }
@@ -19,6 +30,7 @@ public class Course {
         this.id = id;
     }
 
+    @Column( name="title")
     public String getTitle() {
         return title;
     }
@@ -27,6 +39,7 @@ public class Course {
         this.title = title;
     }
 
+    @Column( name="length")
     public int getLength() {
         return length;
     }
@@ -35,6 +48,7 @@ public class Course {
         this.length = length;
     }
 
+    @Column( name="description")
     public String getDescription() {
         return description;
     }

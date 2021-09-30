@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans  xmlns="http://www.springframework.org/schema/beans"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:context="http://www.springframework.org/schema/context"
-        xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
-
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+">
+<context:component-scan base-package="ru.shiriev.springcourse" />
     <!--
     Для начала нужно создать бин connection source В spring их два вида:
     DriverManagerDataSource - всегда возвращает новое соединение
@@ -22,6 +29,7 @@
         <property name="password" value="demo" />
     </bean>
     -->
+    <!-- вроде dbcp это использование пула сессий -->
 <bean id="webDataSource"
       class="org.apache.commons.dbcp.BasicDataSource"
       destroy-method="close">
@@ -38,8 +46,32 @@
         <constructor-arg ref="webDataSource"/>
     </bean>
 
-    <bean id="courseDAO" class="ru.shiriev.springcourse.dao.JdbcCourseDao">
-        <property name="jdbcTemplate" ref="jdbcTemplate"/>
-    </bean>
+<!--    <bean id="courseDAO" class="ru.shiriev.springcourse.dao.JdbcCourseDao">-->
+<!--        <property name="jdbcTemplate" ref="jdbcTemplate"/>-->
+<!--    </bean>-->
+    <util:properties id="hibernateProperties">
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+        <prop key="hibernate.max_fetch_depth">3</prop>
+        <prop key="hibernate.max_fetch_size">50</prop>
+        <prop key="hibernate.max_batch_size">10</prop>
+        <prop key="hibernate.show_sql">true</prop>
+    </util:properties>
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+          p:dataSource-ref="webDataSource"
+          p:packagesToScan="ru.shiriev.springcourse"
+          p:hibernateProperties-ref="hibernateProperties" />
+    <!-- преобразование sql exception в исключения самого spring Чтобы это работало наш бин должен создавиться
+    с аннотацией @Repository -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
+<!-- для того, чтобы управлять транзакциями  необходимо указаать данный элемент  -->
+    <tx:annotation-driven />
+
+    <!-- hibernate требует использованией менеджера транзакций
+    Обратие внимание, что id="transactionManager" это зарезервированный айди, который будет подхватываться
+    аннотацией @Repository автоматом. Если указывать другой айди, то придется прописывать этот айди вручную-->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+          p:sessionFactory-ref="sessionFactory"/>
 </beans>

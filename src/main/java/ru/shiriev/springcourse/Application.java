@@ -31,9 +31,9 @@ public class Application {
 //        s.setLength(42);
 //        courseDAO.update(s);
 
-        courseDAO.delete(8);
+        //courseDAO.delete(8);
 
-                for(Course c: courseDAO.findAll())
+                for(Course c: courseDAO.findByTitle("web"))
             System.out.println(c);
 
         context.close();
