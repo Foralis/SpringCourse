@@ -56,11 +56,24 @@
         <prop key="hibernate.max_batch_size">10</prop>
         <prop key="hibernate.show_sql">true</prop>
     </util:properties>
-    <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
-          p:dataSource-ref="webDataSource"
-          p:packagesToScan="ru.shiriev.springcourse"
-          p:hibernateProperties-ref="hibernateProperties" />
+
+<!--    <bean id="sessionFactory"-->
+<!--          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"-->
+<!--          p:dataSource-ref="webDataSource"-->
+<!--          p:packagesToScan="ru.shiriev.springcourse"-->
+<!--          p:hibernateProperties-ref="hibernateProperties" />-->
+
+<!--    Вместо session factory используем entity manager factory-->
+    <bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="webDataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="packagesToScan" value="ru.shiriev.springcourse.dao" />
+        <property name="jpaProperties" ref="hibernateProperties" />
+    </bean>
+
+
     <!-- преобразование sql exception в исключения самого spring Чтобы это работало наш бин должен создавиться
     с аннотацией @Repository -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
@@ -72,6 +85,6 @@
     Обратие внимание, что id="transactionManager" это зарезервированный айди, который будет подхватываться
     аннотацией @Repository автоматом. Если указывать другой айди, то придется прописывать этот айди вручную-->
     <bean id="transactionManager"
-          class="org.springframework.orm.hibernate5.HibernateTransactionManager"
-          p:sessionFactory-ref="sessionFactory"/>
+          class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="emf"/>
 </beans>

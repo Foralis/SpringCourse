@@ -68,11 +68,11 @@ public class JdbcCourseDao implements CourseDAO{
         return getJdbcTemplate().query(SQL_SELECT_COURSE, new BeanPropertyRowMapper(Course.class));
     }
 
-    @Override
-    public List<Course> findByTitle(String title) {
-        return getJdbcTemplate().query(SQL_SELECT_COURSE_BY_TITLE, new Object[]{"%"+title+"%"},
-                new BeanPropertyRowMapper(Course.class));
-    }
+//    @Override
+//    public List<Course> findByTitle(String title) {
+//        return getJdbcTemplate().query(SQL_SELECT_COURSE_BY_TITLE, new Object[]{"%"+title+"%"},
+//                new BeanPropertyRowMapper(Course.class));
+//    }
 
     @Override
     public void insert(Course course) {

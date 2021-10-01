@@ -7,7 +7,7 @@ public interface CourseDAO {
     List<Course> findAll();
 
     //CRUD
-    List<Course> findByTitle(String title);
+   // List<Course> findByTitle(String title);
     void insert(Course course);
     void update(Course course);
     void delete(int id);
