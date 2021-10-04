@@ -94,4 +94,9 @@ public class JdbcCourseDao implements CourseDAO{
     public void delete(int id) {
         getJdbcTemplate().update(SQL_DELETE_COURSE_BY_ID, id);
     }
+
+    @Override
+    public List<Course> findByTitle(String title) {
+        return null;
+    }
 }

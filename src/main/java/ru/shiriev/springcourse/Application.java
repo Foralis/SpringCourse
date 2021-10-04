@@ -13,13 +13,13 @@ public class Application {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
         CourseDAO courseDAO = context.getBean(CourseDAO.class);
-        for(Course c: courseDAO.findAll())
-            System.out.println(c);
+//        for(Course c: courseDAO.findAll())
+//            System.out.println(c);
 
         //System.out.println(courseDAO.findById(4));
 //
-//        for(Course c: courseDAO.findByTitle("web"))
-//            System.out.println(c);
+        for(Course c: courseDAO.findByTitle("web"))
+            System.out.println(c);
 //
 //        Course nc = new Course();
 //        nc.setTitle("Spring");

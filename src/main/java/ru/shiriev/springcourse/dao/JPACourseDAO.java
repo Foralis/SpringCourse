@@ -33,6 +33,12 @@ public class JPACourseDAO implements CourseDAO{
     }
 
     @Override
+    public List<Course> findByTitle(String title) {
+        return em.createQuery("select c from Course c where c.title like :title", // JPQL
+                Course.class).setParameter("title","%"+title+"%").getResultList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Course> findAll() {
         return em.createQuery("select c from Course c", // JPQL
